@@ -167,7 +167,7 @@ def test_data(args):
     model.cuda()
     warm_start  = True
 
-    pre_train = torch.load('DIP_sintel.pth')
+    pre_train = torch.load(args.model)
     model.load_state_dict(pre_train, strict=False)
 
     model.eval()
