@@ -32,3 +32,7 @@ The datasets used to train and evaluate DIP are as follows:
 * [Sintel](http://sintel.is.tue.mpg.de/)
 * [KITTI](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow)
 * [HD1K](http://hci-benchmark.iwr.uni-heidelberg.de/) 
+
+## Acknowledgements
+
+This project is based on [RAFT](https://github.com/princeton-vl/RAFT) and [SCV](https://github.com/zacjiang/SCV). We thank the original authors for their excellent work.
