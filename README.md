@@ -22,10 +22,13 @@ You can run a trained model on a sequence of images and visualize the results:
 CUDA_VISIBLE_DEVICES=0 python demo.py \
 --model DIP_sintel.pth
 ```
+for stereo matching version:
+CUDA_VISIBLE_DEVICES=0 python demo_stereo.py \
+--model DIP_stereo.pth --path input_stereo_imgs
 
 ## Datasets
 
-The datasets used to train and evaluate DIP are as follows:
+The datasets used to train and evaluate DIP flow are as follows:
 
 * [FlyingChairs](https://lmb.informatik.uni-freiburg.de/resources/datasets/FlyingChairs.en.html#flyingchairs)
 * [FlyingThings3D](https://lmb.informatik.uni-freiburg.de/resources/datasets/SceneFlowDatasets.en.html)
@@ -33,6 +36,8 @@ The datasets used to train and evaluate DIP are as follows:
 * [KITTI](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow)
 * [HD1K](http://hci-benchmark.iwr.uni-heidelberg.de/) 
 
+In the stereo matching version, we also added the CRE datasets as training
+* [CREStereo]([http://hci-benchmark.iwr.uni-heidelberg.de/](https://github.com/megvii-research/CREStereo)) 
 ## Acknowledgements
 
 This project is based on [RAFT](https://github.com/princeton-vl/RAFT) and [SCV](https://github.com/zacjiang/SCV). We thank the original authors for their excellent work.
