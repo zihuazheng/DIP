@@ -37,8 +37,8 @@ The datasets used to train and evaluate DIP flow are as follows:
 * [KITTI](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=flow)
 * [HD1K](http://hci-benchmark.iwr.uni-heidelberg.de/) 
 
-In the stereo matching version, we also added the CRE datasets as training:
-* [CREStereo]([http://hci-benchmark.iwr.uni-heidelberg.de/](https://github.com/megvii-research/CREStereo))
+Furthermore, we supplemented the training data with stereo image pairs from the CRE dataset to enhance the diversity of scenarios for our stereo matching model.
+* [CREStereo](https://github.com/megvii-research/CREStereo)
   
 ## Acknowledgements
 
