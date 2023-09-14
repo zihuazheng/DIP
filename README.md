@@ -23,9 +23,10 @@ CUDA_VISIBLE_DEVICES=0 python demo.py \
 --model DIP_sintel.pth
 ```
 for stereo matching version:
+```
 CUDA_VISIBLE_DEVICES=0 python demo_stereo.py \
 --model DIP_stereo.pth --path input_stereo_imgs
-
+```
 ## Datasets
 
 The datasets used to train and evaluate DIP flow are as follows:
