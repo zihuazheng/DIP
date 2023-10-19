@@ -6,7 +6,7 @@ Official PyTorch implementation of paper:
 
 # Change Log 
 ## 2023-10-19
-Here we add support for onnx
+Here we add stereo matching support for onnx
 
 ## Installation
 
