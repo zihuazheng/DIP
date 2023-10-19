@@ -1,0 +1,1 @@
+python3 export.py --model pretrain/DIP_stereo.pth --export_path ./onnx_model/ --max_disp 192 --iters 4 

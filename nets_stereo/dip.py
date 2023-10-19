@@ -74,7 +74,7 @@ class DIP(nn.Module):
         up_flow = up_flow.permute(0, 1, 4, 2, 5, 3)
         return up_flow.reshape(N, 2, rate * H, rate * W)
 
-    def forward(self, image1, image2, iters = 4):
+    def forward(self, image1, image2, iters = 2):
         """ Estimate optical flow between pair of frames """
 
         image1 = 2 * (image1 / 255.0) - 1.0
@@ -112,7 +112,7 @@ class DIP(nn.Module):
 
         # init flow
         s_flow = self.random_init_flow(s_fmap1, max_flow=self.max_flow // 16)
-
+        # print(image1.sahpe, fmap1.shape)
         # small refine: 1/16
         flow = None
         flow_up = None
@@ -120,49 +120,59 @@ class DIP(nn.Module):
         for itr in range(iters):
             # --------------- update1 ---------------
             s_flow = s_flow.detach()
-            out_corrs = s_patch_fn(s_flow, is_shift=False, shift=2)
-
+            out_corrs = s_patch_fn(s_flow, prop=False)
+            need_mask = not self.test_mode
             with autocast(enabled=self.mixed_precision):
-                s_net, up_mask, delta_flow = self.update_block_s(s_net, s_inp, out_corrs, s_flow)
+                s_net, up_mask, delta_flow = self.update_block_s(s_net, s_inp, out_corrs, s_flow, need_mask)
 
             s_flow = s_flow + delta_flow
-            flow = self.upsample_flow(s_flow, up_mask, rate=4)
-            flow_up = - upflow4(flow)
-            flow_predictions.append(flow_up)
+            if need_mask:
+                flow = self.upsample_flow(s_flow, up_mask, rate=4)
+                flow_up = - upflow4(flow)
+                flow_predictions.append(flow_up)
 
             # --------------- update2 ---------------
             s_flow = s_flow.detach()
-            out_corrs = s_patch_fn(s_flow, is_shift=True, shift=2)
-
+            out_corrs = s_patch_fn(s_flow, prop=True)
+            need_mask = not self.test_mode or itr == (iters - 1)
             with autocast(enabled=self.mixed_precision):
-                s_net, up_mask, delta_flow = self.update_block(s_net, s_inp, out_corrs, s_flow)
+                s_net, up_mask, delta_flow = self.update_block(s_net, s_inp, out_corrs, s_flow, need_mask)
 
             s_flow = s_flow + delta_flow
-            flow = self.upsample_flow(s_flow, up_mask, rate=4)
-            flow_up = - upflow4(flow)
-            flow_predictions.append(flow_up)
+            if need_mask:
+                # print('up')
+                flow = self.upsample_flow(s_flow, up_mask, rate=4)
+                flow_up = - upflow4(flow)
+                flow_predictions.append(flow_up)
 
         # large refine: 1/4
+        # refine_iter = max(1, iters//2)
+        iters=2
         for itr in range(iters):
             # --------------- update1 ---------------
             flow = flow.detach()
-            out_corrs = patch_fn(flow, is_shift=False, shift=2)
+            out_corrs = patch_fn(flow, prop=False)
+            need_mask = not self.test_mode
             with autocast(enabled=self.mixed_precision):
-                net, up_mask, delta_flow = self.update_block_s(net, inp, out_corrs, flow)
+                net, up_mask, delta_flow = self.update_block_s(net, inp, out_corrs, flow, need_mask)
 
             flow = flow + delta_flow
-            flow_up = - self.upsample_flow(flow, up_mask, rate=4)
-            flow_predictions.append(flow_up)
+            if need_mask:
+                flow_up = - self.upsample_flow(flow, up_mask, rate=4)
+                flow_predictions.append(flow_up)
 
             # --------------- update2 ---------------
             flow = flow.detach()
-            out_corrs = patch_fn(flow, is_shift=True, shift=2)
+            out_corrs = patch_fn(flow, prop=True)
+            need_mask = not self.test_mode or itr == (iters - 1)
             with autocast(enabled=self.mixed_precision):
-                net, up_mask, delta_flow = self.update_block(net, inp, out_corrs, flow)
+                net, up_mask, delta_flow = self.update_block(net, inp, out_corrs, flow, need_mask)
 
             flow = flow + delta_flow
-            flow_up = - self.upsample_flow(flow, up_mask, rate=4)
-            flow_predictions.append(flow_up)
+            if need_mask:
+                # print('up')
+                flow_up = - self.upsample_flow(flow, up_mask, rate=4)
+                flow_predictions.append(flow_up)
 
         if self.test_mode:
             return flow_up

@@ -1,0 +1,1 @@
+python3 run_onnx.py --DIP_path onnx_model/DIP_stereo.onnx --path input_stereo_imgs

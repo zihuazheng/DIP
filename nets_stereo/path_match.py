@@ -29,14 +29,16 @@ class PathMatch:
 
     def warp(self, coords, image, h, w):
         # scale grid to [-1,1]
-        coords[: ,0 ,: ,:] = 2.0 *coords[: ,0 ,: ,:].clone() / max(self.W -1 ,1 ) -1.0
-        coords[: ,1 ,: ,:] = 2.0 *coords[: ,1 ,: ,:].clone() / max(self.H -1 ,1 ) -1.0
-
+        # coords[: ,0 ,: ,:] = 2.0 *coords[: ,0 ,: ,:].clone() / max(self.W -1 ,1 ) -1.0
+        # coords[: ,1 ,: ,:] = 2.0 *coords[: ,1 ,: ,:].clone() / max(self.H -1 ,1 ) -1.0
+        one = coords.new_tensor(1).to(coords)
+        size = torch.stack([one*self.W - 1, one*self.H - 1])
+        coords = coords * 2 / size[None, :, None, None]  - 1.0
         coords = coords.permute(0 ,2 ,3 ,1)
         output = F.grid_sample(image, coords, align_corners=True, padding_mode="border")
         return output
 
-    def search(self, flow, scale = 1):
+    def search(self, flow):
         corrs = []
         # u, v = torch.split(flow, [1, 1], dim=1)
 
@@ -65,12 +67,12 @@ class PathMatch:
         corr  = corr.view(self.N, 10, self.H, self.W)
         return corr
 
-    def __call__(self, flow, is_shift = True, shift = 2, scale = 1):
+    def __call__(self, flow, prop = True):
         # print('self.coords.shape: ', self.coords.shape)
         # print('flow.shape: ', flow.shape)
-        if(is_shift):
+        if(prop):
             out_corrs = self.inverse_propagation(flow)
         else:
-            out_corrs = self.search(flow, scale = scale)
+            out_corrs = self.search(flow)
 
         return out_corrs
