@@ -4,11 +4,16 @@ Official PyTorch implementation of paper:
 
 [**DIP: Deep Inverse Patchmatch for High-Resolution Optical Flow**](https://openaccess.thecvf.com/content/CVPR2022/papers/Zheng_DIP_Deep_Inverse_Patchmatch_for_High-Resolution_Optical_Flow_CVPR_2022_paper.pdf), **CVPR 2022**
 
+# Change Log
+All notable changes to this project will be documented in this file.
+ 
+## [Unreleased] - 2023-10-19
+Here we add support for onnx
 
 ## Installation
 
 Our code is based on pytorch 1.6.0, CUDA 10.1 and python 3.8.
-
+The stereo matching version is based on pytorch 2.0.1, CUDA 11.7 and python 3.10.12
 
 ## Demos
 
