@@ -7,7 +7,7 @@ from torch.autograd import Variable
 from .update import BasicUpdateBlock, SmallUpdateBlock
 from .extractor import BasicEncoder, BasicEncoderQuarter
 from .utils.utils import bilinear_sampler, coords_grid, upflow4
-from .path_match import PathMatch
+from .patch_match import PathMatch
 
 import argparse
 
