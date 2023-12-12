@@ -5,7 +5,7 @@ Official PyTorch implementation of paper:
 [**DIP: Deep Inverse Patchmatch for High-Resolution Optical Flow**](https://openaccess.thecvf.com/content/CVPR2022/papers/Zheng_DIP_Deep_Inverse_Patchmatch_for_High-Resolution_Optical_Flow_CVPR_2022_paper.pdf), **CVPR 2022**
 
 # Change Log 
-## 2023-10-19
+## 2023-12-12
 upload stereo training codes, Mainly modified from [unimatch](https://github.com/autonomousvision/unimatch) and [CRE-Pytorch](https://github.com/ibaiGorordo/CREStereo-Pytorch)
 ## 2023-10-19
 Here we add stereo matching support for onnx
