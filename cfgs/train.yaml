@@ -1,0 +1,20 @@
+seed: 0
+mixed_precision: false
+base_lr: 5.0e-4
+
+nr_gpus: 1
+batch_size: 2
+n_total_epoch: 600
+minibatch_per_epoch: 500
+
+loadmodel: ~
+log_dir: "./train_log"
+model_save_freq_epoch: 2
+
+max_disp: 128
+image_width: 768
+image_height: 512
+stage: "pretrain"
+
+log_level: "logging.INFO"
+dist: True # True for DDP, False for DP
