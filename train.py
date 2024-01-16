@@ -212,13 +212,14 @@ def train_dist(args, world_size):
 
             # pre-process
             gt_disp = torch.unsqueeze(gt_disp, dim=1)  # [2, 384, 512] -> [2, 1, 384, 512]
+            gt_flow = torch.cat([gt_disp, gt_disp * 0], dim=1)  # [2, 2, 384, 512]
 
             # forward
             flow_predictions = model(left, right)
 
             # loss & backword
             loss = sequence_loss(
-                flow_predictions, gt_disp, valid_mask, gamma=0.8
+                flow_predictions, gt_flow, valid_mask, gamma=0.8
             ).to(local_rank)
             loss = loss
             # loss stats
@@ -398,6 +399,7 @@ def train(args, world_size):
             # pre-process
             gt_disp = torch.unsqueeze(gt_disp, dim=1)  # [2, 384, 512] -> [2, 1, 384, 512]
             valid_mask = (gt_disp > 0) & (gt_disp < args.max_disp)
+            gt_flow = torch.cat([gt_disp, gt_disp * 0], dim=1)  # [2, 2, 384, 512]
 
             # forward
             # flow_predictions, conf = model(left, right)
@@ -405,7 +407,7 @@ def train(args, world_size):
 
             # loss & backword
             loss = sequence_loss(
-                flow_predictions, gt_disp, valid_mask, gamma=0.8
+                flow_predictions, gt_flow, valid_mask, gamma=0.8
             )
 
             # loss stats
